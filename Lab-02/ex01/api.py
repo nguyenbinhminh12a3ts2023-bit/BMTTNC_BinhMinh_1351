@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from cipher.vigenere import VigenereCipher
 from cipher.caesar import CaesarCipher
+from cipher.railfence.railfence_cypher import RailFenceCipher
 app = Flask(__name__)
 
 # CAESAR CIPHER ALGORITHM
@@ -42,8 +43,35 @@ def vigenere_decrypt():
     key = data['key']
     decrypted_text = vigenere_cipher.vigenere_decrypt(cipher_text, key)
     return jsonify({'decrypted_text': decrypted_text})
+# RAILFENCE CIPHER ALGORITHM
+# Khởi tạo đối tượng từ class đã import ở đầu file
+railfence_cipher = RailFenceCipher()
+
+@app.route('/api/railfence/encrypt', methods=['POST'])
+def railfence_encrypt():
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    
+    plain_text = data.get('plain_text')
+    key = int(data.get('key'))
+    
+    encrypted_text = railfence_cipher.rail_fence_encrypt(plain_text, key)
+    return jsonify({'encrypted_text': encrypted_text})
+
+@app.route('/api/railfence/decrypt', methods=['POST'])
+def railfence_decrypt():
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+        
+    cipher_text = data.get('cipher_text')
+    key = int(data.get('key'))
+    
+    decrypted_text = railfence_cipher.rail_fence_decrypt(cipher_text, key)
+    return jsonify({'decrypted_text': decrypted_text})
+
 # main function
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-    
     
