@@ -42,6 +42,7 @@ class MyApp(QMainWindow):
             response = requests.post(url, json=payload)
             if response.status_code == 200:
                 data = response.json()
+                #fix
                 self.ui.txtplaintext.setText(data["decrypted_message"])
                 
                 msg = QMessageBox()
